@@ -1,0 +1,35 @@
+buildscript {
+    ext.repos = {
+        jcenter()
+        mavenCentral()
+        maven { url 'https://plugins.gradle.org/m2/'}
+        maven { url 'https://repository.axelor.com/nexus/public/' }
+    }
+    repositories repos
+    dependencies {
+        classpath 'com.axelor:axelor-gradle:5.3.0'
+    }
+}
+
+allprojects {
+    repositories repos
+}
+
+apply plugin: 'com.axelor.app'
+
+axelor {
+    title = '销售管理演示模块'
+}
+
+allprojects {
+    apply plugin: 'idea'
+    group 'com.mingming.sales'
+    version '1.0-SNAPSHOT'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+dependencies {
+    compile project(":modules:sales")
+}

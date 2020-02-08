@@ -1,0 +1,3 @@
+rootProject.name = 'ming-sales-demo'
+
+include "modules:sales"

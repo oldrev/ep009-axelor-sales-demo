@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://axelor.com/xml/ns/domain-models http://axelor.com/xml/ns/domain-models/domain-models_5.3.xsd">
+
+    <module name="sales" package="com.mingming.sales.db"/>
+
+    <!-- 商品相关定义 -->
+
+    <entity name="Product" table="SALES_PRODUCT" repository="none">
+        <string name="name" required="true" namecolumn="true" title="名称" />
+        <decimal name="unitPrice" required="true" initParam="true" title="单价" />
+        <many-to-one name="image"  title="商品图片" ref="com.axelor.meta.db.MetaFile" />
+        <string name="notes" large="true" title="备注" />
+    </entity>
+
+    <!-- 客户相关定义 -->
+
+    <entity name="Customer" table="SALES_CUSTOMER" repository="none">
+        <string name="name" required="true" namecolumn="true" title="姓名" />
+        <string name="mobile" required="true" title="手机" />
+        <many-to-one name="image"  title="图片" ref="com.axelor.meta.db.MetaFile" />
+        <string name="notes" large="true" title="备注" />
+    </entity>
+
+    <!-- 销售订单相关定义 -->
+
+    <entity name="Order" table="SALES_ORDER" repository="abstract">
+        <string name="code" required="true" namecolumn="true" title="单号" unique="true" />
+        <datetime name="orderTime" required="true" title="下单时间" />
+        <enum name="status" ref="OrderStatus" required="true" title="订单状态" default="DRAFT" />
+        <many-to-one name="customer" ref="Customer" title="客户" required="true" />
+        <datetime name="confirmTime" />
+        <boolean name="confirmed" />
+        <one-to-many name="lines" ref="OrderLine" mappedBy="salesOrder" title="订单明细" />
+        <decimal name="totalAmount" precision="20" scale="2" title="总计金额" readonly="true" />
+        <string name="notes" large="true" title="备注" />
+    </entity>
+
+    <entity name="OrderLine" table="SALES_ORDER_LINE" repository="none">
+        <integer name="sequence" />
+        <many-to-one name="salesOrder" ref="Order" title="订单" required="true" />
+        <many-to-one name="product" ref="Product" title="商品" required="true" />
+        <decimal name="unitPrice" title="单价" required="true" min="0.0"  />
+        <decimal name="quantity" title="数量" required="true" />
+        <decimal name="subtotalAmount" title="小计金额" readonly="true">
+            <![CDATA[
+                return unitPrice.multiply(quantity);
+            ]]>
+        </decimal>
+        <string name="notes" title="备注" />
+    </entity>
+
+
+    <enum name="OrderStatus">
+        <item name="DRAFT" value="draft" title="草稿" />
+        <item name="OPEN" value="open" title="等待付款" />
+        <item name="PAID" value="paid" title="待发货" />
+        <item name="DONE" value="done" title="完成" />
+        <item name="CANCELED" value="canceled" title="取消" />
+    </enum>
+
+
+</domain-models>

@@ -1,0 +1,15 @@
+apply plugin: 'com.axelor.app-module'
+
+axelor {
+    title "Sales Demo"
+
+    version "0.1.0"
+
+    description """销售演示模块"""
+
+    // 下面的 removable 表示此模块可以卸载
+    // removable = true
+}
+
+dependencies {
+}

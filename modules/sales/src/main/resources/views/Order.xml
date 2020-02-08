@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+
+    <!-- 销售订单网格（列表）视图 -->
+    <grid name="order-grid" title="销售订单" model="com.mingming.sales.db.Order">
+        <field name="code" />
+        <field name="orderTime"/>
+        <field name="customer" />
+        <field name="totalAmount" />
+        <field name="status" />
+    </grid>
+
+    <!-- 销售订单表单视图 -->
+    <form name="order-form" title="销售订单" model="com.mingming.sales.db.Order"
+          onNew="default-order-record" >
+        <panel title="订单基本信息">
+            <field name="status" widget="nav-select" readonly="true" colSpan="12" />
+            <field name="code" readonlyIf="status.equals('draft')" />
+            <field name="orderTime" readonlyIf="status.equals('draft')" />
+            <field name="customer" readonlyIf="status.equals('draft')" />
+        </panel>
+        <panel-tabs>
+            <panel-related field="lines" editable="true" orderBy="sequence" canMove="true"
+                           readonlyIf="status.equals('draft')"
+                           onChange="com.mingming.sales.web.OrderController:calculate">
+                <field name="product" />
+                <field name="unitPrice" />
+                <field name="quantity" />
+                <field name="subtotalAmount" />
+                <field name="notes" />
+            </panel-related>
+            <panel title="备注">
+                <field name="notes" showTitle="false" colSpan="12"/>
+            </panel>
+        </panel-tabs>
+        <panel>
+            <panel colSpan="4" itemSpan="12">
+                <button name="totalAmount" onClick="com.mingming.sales.web.OrderController:calculate,save" 
+                        title="总金额（点击刷新）" icon="fa-refresh" widget="info-button" css="btn-primary"/>
+            </panel>
+        </panel>
+
+        <!-- 侧边栏面板，一般用于放置触发业务的按钮 -->        
+        <panel name="actionsPanel" hideIf="customer == null" sidebar="true" stacked="true" title="操作">
+            <button name="confirmButton" title="确认订单" colSpan="12" onClick="save,com.mingming.sales.web.OrderController:onConfirm" showIf="status=='DRAFT'"/>
+        </panel>
+
+    </form>
+
+    <calendar name="order-timeline" title="销售单日历视图" model="com.mingming.sales.db.Order" editable="false"
+        eventStart="orderTime"
+        eventStop="confirmTime"
+        eventLength="8"
+        colorBy="customer">
+        <field name="code" />
+    </calendar>
+
+
+    <action-record name="default-order-record" model="com.mingming.sales.db.Order">
+        <field name="orderTime" expr="eval: __datetime__"/>
+        <field name="status" expr="DRAFT" />
+    </action-record>
+
+
+</object-views>

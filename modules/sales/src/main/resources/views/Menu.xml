@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://axelor.com/xml/ns/object-views http://axelor.com/xml/ns/object-views/object-views_5.3.xsd">
+
+    <menuitem name="menu-sales" title="销售管理" icon="fa-line-chart" icon-background="violet" />
+
+    <menuitem name="menu-product" title="商品管理" parent="menu-sales" action="action.sales.products"/>
+
+    <action-view name="action.sales.products" title="商品" model="com.mingming.sales.db.Product">
+        <view type="grid" name="product-grid" />
+        <view type="form" name="product-form" />
+    </action-view>
+
+    <menuitem name="menu-customer" title="客户管理" parent="menu-sales" action="action.sales.customers"/>
+
+    <action-view name="action.sales.customers" title="客户" model="com.mingming.sales.db.Customer">
+        <view type="grid" name="customer-grid" />
+        <view type="form" name="customer-form" />
+    </action-view>
+
+    <menuitem name="menu-order" title="销售订单管理" parent="menu-sales" action="action.sales.orders"/>
+
+    <action-view name="action.sales.orders" title="客户" model="com.mingming.sales.db.Order">
+        <view type="grid" name="order-grid" />
+        <view type="form" name="order-form" />
+        <view type="calendar" name="order-timeline" />
+    </action-view>
+
+</object-views>
